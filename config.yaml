@@ -91,7 +91,7 @@ llm:
     - gemini-3-flash-preview     # 主(無料枠あり)
     - gemini-3.1-flash-lite      # 副(フォールバック)
   temperature: 0.3
-  max_output_tokens: 2048
+  max_output_tokens: 4096
 
 mail:
   subject_template: "【天気ダイジェスト】{date} 全国・東日本・西日本"
