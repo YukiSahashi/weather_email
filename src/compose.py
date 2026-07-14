@@ -2,11 +2,11 @@
 
 2段階構成:
   1) 下書き生成    : 気象庁データ + ニュースを渡して記事化
-  2) ファクトチェック: 下書きを気象庁データと突き合わせ、
-                       データにない数値・警報・誇張を除去した最終版を出力
+  2) ファクトチェック: 下書きを気象庁データ・ニュースと突き合わせ、
+                       データにない数値・警報・URLを除去した最終版を出力
 
 「LLMによるファクトチェック」は、外部知識との照合ではなく
-“与えた一次データとの整合チェック”として運用するのが要点。
+"与えた一次データとの整合チェック"として運用するのが要点。
 """
 from __future__ import annotations
 
@@ -37,6 +37,6 @@ def build_digest(cfg: dict, jma_block: str, news_block: str,
     draft = gen(draft_prompt, system)
 
     fc_prompt = load_prompt("fact_check_prompt.txt").format(
-        date=today, jma_block=jma_block, draft=draft)
+        date=today, jma_block=jma_block, news_block=news_block, draft=draft)
     final = gen(fc_prompt, system)
     return final.strip()
