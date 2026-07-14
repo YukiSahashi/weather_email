@@ -1,0 +1,86 @@
+# =============================================================
+# 天気ダイジェスト 設定ファイル
+# 「どこから取るか」は全部ここで変えられます
+# =============================================================
+
+app:
+  timezone: Asia/Tokyo
+  news_window_hours: 24     # 何時間前までのニュースを対象にするか
+  max_articles: 6           # LLMに渡す記事の最大本数
+
+# -------------------------------------------------------------
+# 気象庁 (一次情報源。数値・警報の唯一の根拠)
+# 地域コード一覧: https://www.jma.go.jp/bosai/common/const/area.json
+# -------------------------------------------------------------
+jma:
+  endpoints:
+    forecast: "https://www.jma.go.jp/bosai/forecast/data/forecast/{area}.json"
+    overview: "https://www.jma.go.jp/bosai/forecast/data/overview_forecast/{area}.json"
+  regions:
+    national:
+      label: 全国
+      areas:
+        - { code: "016000", name: 北海道（石狩地方） }
+        - { code: "230000", name: 愛知県 }
+        - { code: "471000", name: 沖縄本島地方 }
+    east:
+      label: 東日本
+      areas:
+        - { code: "130000", name: 東京都 }
+        - { code: "040000", name: 宮城県 }
+        - { code: "150000", name: 新潟県 }
+    west:
+      label: 西日本
+      areas:
+        - { code: "270000", name: 大阪府 }
+        - { code: "340000", name: 広島県 }
+        - { code: "400000", name: 福岡県 }
+
+# -------------------------------------------------------------
+# ニュースフィード (補助情報源。見出し・話題の把握用)
+# 注意: NHKは2025年秋のNHK ONE移行でRSSのURLが news.web.nhk 配下に
+# 変わったため、新URLを主、旧URLをフォールバックにしている。
+# フィードを足すときはこのリストに追記するだけでよい。
+# -------------------------------------------------------------
+news:
+  feeds:
+    - name: NHK 主要ニュース
+      url: "https://news.web.nhk/n-data/conf/na/rss/cat0.xml"
+      fallback_url: "https://www3.nhk.or.jp/rss/news/cat0.xml"
+    - name: NHK 社会
+      url: "https://news.web.nhk/n-data/conf/na/rss/cat1.xml"
+      fallback_url: "https://www3.nhk.or.jp/rss/news/cat1.xml"
+  # タイトル/要旨にこれらの語を含む記事だけ採用する
+  keywords:
+    - 天気
+    - 気象
+    - 台風
+    - 大雨
+    - 豪雨
+    - 猛暑
+    - 熱中症
+    - 大雪
+    - 暴風
+    - 高波
+    - 警報
+    - 注意報
+    - 竜巻
+    - 落雷
+    - 梅雨
+    - 気温
+  fetch_article_body: true   # 記事本文まで取得するか(私的利用の範囲で)
+
+# -------------------------------------------------------------
+# LLM (Gemini)。models は上から順に試行 = 簡易モデルルーティング
+# 429/5xx やエラー時に次のモデルへフォールバックする
+# -------------------------------------------------------------
+llm:
+  provider: gemini
+  models:
+    - gemini-2.5-flash
+    - gemini-2.5-flash-lite
+  temperature: 0.3
+  max_output_tokens: 2048
+
+mail:
+  subject_template: "【天気ダイジェスト】{date} 全国・東日本・西日本"
