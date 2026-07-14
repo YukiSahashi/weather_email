@@ -1,0 +1,6 @@
+requests>=2.31
+feedparser>=6.0
+PyYAML>=6.0
+trafilatura>=1.8
+markdown>=3.5
+pytest>=8.0
