@@ -77,8 +77,8 @@ news:
 llm:
   provider: gemini
   models:
-    - gemini-2.5-flash
-    - gemini-2.5-flash-lite
+    - gemini-3-flash-preview     # 主(無料枠あり)
+    - gemini-3.1-flash-lite      # 副(フォールバック)
   temperature: 0.3
   max_output_tokens: 2048
 
